@@ -1,12 +1,15 @@
 import sys
 from PyQt5 import QtWidgets
 from calculator_ui import Ui_MainWindow
+from calculator_sounds import SoundManager
 
 
 class CalculatorApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        
+        self.sound_manager = SoundManager.get_instance()
         
         self.current_input = "0"
         self.previous_value = None
@@ -46,6 +49,8 @@ class CalculatorApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.display_output.setText(self.current_input)
     
     def on_number_click(self):
+        self.sound_manager.play_number()
+        
         button = self.sender()
         digit = button.text()
         
@@ -68,6 +73,8 @@ class CalculatorApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.update_display()
     
     def on_dot_click(self):
+        self.sound_manager.play_number()
+        
         if self.is_error:
             self.is_error = False
             self.current_input = "0."
@@ -83,6 +90,8 @@ class CalculatorApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.update_display()
     
     def on_operation_click(self):
+        self.sound_manager.play_operator()
+        
         if self.is_error:
             self.on_clear_click()
             return
@@ -101,6 +110,8 @@ class CalculatorApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.new_input = True
     
     def on_equals_click(self):
+        self.sound_manager.play_equals()
+        
         if self.is_error:
             self.on_clear_click()
             return
@@ -123,6 +134,7 @@ class CalculatorApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 if current == 0:
                     self.current_input = "Ошибка"
                     self.is_error = True
+                    self.sound_manager.play_error()
                     self.update_display()
                     return
                 result = self.previous_value / current
@@ -139,9 +151,12 @@ class CalculatorApp(QtWidgets.QMainWindow, Ui_MainWindow):
         except (ValueError, OverflowError):
             self.current_input = "Ошибка"
             self.is_error = True
+            self.sound_manager.play_error()
             self.update_display()
     
     def on_clear_click(self):
+        self.sound_manager.play_control()
+        
         self.current_input = "0"
         self.previous_value = None
         self.operation = None
@@ -150,6 +165,8 @@ class CalculatorApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.update_display()
     
     def on_clear_entry_click(self):
+        self.sound_manager.play_control()
+        
         if self.is_error:
             self.is_error = False
         self.current_input = "0"
@@ -157,6 +174,8 @@ class CalculatorApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.update_display()
     
     def on_delete_click(self):
+        self.sound_manager.play_control()
+        
         if self.is_error:
             return
         
@@ -167,6 +186,8 @@ class CalculatorApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.update_display()
     
     def on_percent_click(self):
+        self.sound_manager.play_control()
+        
         if self.is_error:
             return
         
@@ -177,9 +198,12 @@ class CalculatorApp(QtWidgets.QMainWindow, Ui_MainWindow):
         except (ValueError, OverflowError):
             self.current_input = "Ошибка"
             self.is_error = True
+            self.sound_manager.play_error()
             self.update_display()
     
     def on_sign_click(self):
+        self.sound_manager.play_control()
+        
         if self.is_error:
             return
         
@@ -190,9 +214,12 @@ class CalculatorApp(QtWidgets.QMainWindow, Ui_MainWindow):
         except (ValueError, OverflowError):
             self.current_input = "Ошибка"
             self.is_error = True
+            self.sound_manager.play_error()
             self.update_display()
     
     def on_inverse_click(self):
+        self.sound_manager.play_control()
+        
         if self.is_error:
             return
         
@@ -201,15 +228,19 @@ class CalculatorApp(QtWidgets.QMainWindow, Ui_MainWindow):
             if current == 0:
                 self.current_input = "Ошибка"
                 self.is_error = True
+                self.sound_manager.play_error()
             else:
                 self.current_input = str(1 / current)
             self.update_display()
         except (ValueError, OverflowError):
             self.current_input = "Ошибка"
             self.is_error = True
+            self.sound_manager.play_error()
             self.update_display()
     
     def on_square_click(self):
+        self.sound_manager.play_control()
+        
         if self.is_error:
             return
         
@@ -224,9 +255,12 @@ class CalculatorApp(QtWidgets.QMainWindow, Ui_MainWindow):
         except (ValueError, OverflowError):
             self.current_input = "Ошибка"
             self.is_error = True
+            self.sound_manager.play_error()
             self.update_display()
     
     def on_sqrt_click(self):
+        self.sound_manager.play_control()
+        
         if self.is_error:
             return
         
@@ -235,6 +269,7 @@ class CalculatorApp(QtWidgets.QMainWindow, Ui_MainWindow):
             if current < 0:
                 self.current_input = "Ошибка"
                 self.is_error = True
+                self.sound_manager.play_error()
             else:
                 result = current ** 0.5
                 if result == int(result):
@@ -245,6 +280,7 @@ class CalculatorApp(QtWidgets.QMainWindow, Ui_MainWindow):
         except (ValueError, OverflowError):
             self.current_input = "Ошибка"
             self.is_error = True
+            self.sound_manager.play_error()
             self.update_display()
 
 

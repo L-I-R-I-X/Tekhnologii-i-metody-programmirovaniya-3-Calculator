@@ -17,17 +17,13 @@ class SoundManager:
             'exit': QSoundEffect(),
         }
         
-        # Получаем правильный путь (для .exe и для исходников)
         if getattr(sys, 'frozen', False):
-            # Запущено из .exe (PyInstaller)
             base_path = sys._MEIPASS
         else:
-            # Запущено из исходников
             base_path = os.path.dirname(os.path.abspath(__file__))
         
         sounds_dir = os.path.join(base_path, 'sounds')
         
-        # Настраиваем пути к звуковым файлам
         sound_files = {
             'number': 'number.wav',
             'operator': 'operator.wav',
@@ -37,24 +33,21 @@ class SoundManager:
             'exit': 'exit.wav',
         }
         
-        # Загружаем звуки
         for sound_type, filename in sound_files.items():
             sound_path = os.path.join(sounds_dir, filename)
             self.sounds[sound_type].setSource(QUrl.fromLocalFile(sound_path))
-            self.sounds[sound_type].setVolume(0.5)  # Громкость 50%
+            self.sounds[sound_type].setVolume(0.5)
     
     @classmethod
     def get_instance(cls):
-        """Получить единственный экземпляр SoundManager (Singleton)"""
         if cls._instance is None:
             cls._instance = SoundManager()
         return cls._instance
     
     def play(self, sound_type):
-        """Воспроизвести звук по типу"""
         sound = self.sounds.get(sound_type)
         if sound:
-            sound.stop()  # Остановить предыдущее воспроизведение
+            sound.stop()
             sound.play()
     
     def play_number(self):
